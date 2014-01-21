@@ -4,8 +4,10 @@
 	Give parameters with a string to -p (separate matrix items with " " and
 	ifs member functions with ",").   Or name a builtin IFS with -p.
 
+	-s=0 is chaos game. -s=1 is mapping whole pictures (can use multiple cores).
+
 	# Deterministic demo:
-	time go run main.go -p t -s 1 -n 20 > _1.png
+	GOMAXPROCS=4 time go run main.go -p t -s 1 -n 20 > _1.png
 
 	# Chaos demo:
 	time go run main.go -p t -s 0 -n 5000000 > _0.png

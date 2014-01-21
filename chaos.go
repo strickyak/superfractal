@@ -65,14 +65,19 @@ func (o IFS) WholeGame(src *canvas.Canvas, n int) *canvas.Canvas {
 }
 
 func (o IFS) WholeStep(src *canvas.Canvas, dest *canvas.Canvas) {
+	wait := make(chan int)
 	for k := 0; k < len(o.Choices); k++ {
-		canvas.Say("    Map", k)
-		o.Choices[k].MapImageTo(src, dest)
+		canvas.Say("    go Map", k)
+		go o.Choices[k].MapImageTo(src, dest, k, wait)
+	}
+	for k := 0; k < len(o.Choices); k++ {
+		w := <-wait
+		canvas.Say("      Waited", w)
 	}
 }
 
 // MapImageTo maps one picture through an IFS onto another.
-func (o Affine) MapImageTo(src *canvas.Canvas, dest *canvas.Canvas) {
+func (o Affine) MapImageTo(src *canvas.Canvas, dest *canvas.Canvas, k int, done chan int) {
 	for i := 0; i < src.Width; i++ {
 		x := float64(i) / src.FWidth
 		for j := 0; j < src.Height; j++ {
@@ -84,6 +89,7 @@ func (o Affine) MapImageTo(src *canvas.Canvas, dest *canvas.Canvas) {
 			}
 		}
 	}
+	done <- k
 }
 
 // Choose one member of the IFS.

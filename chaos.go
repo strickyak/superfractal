@@ -4,6 +4,7 @@ import (
 	. "fmt"
 	"math/rand"
 	"strings"
+	"unicode"
 
 	"github.com/strickyak/canvas"
 )
@@ -14,10 +15,13 @@ var Builtin = make(map[string]string)
 
 func init() {
 	// Sierpinski's Triangle.
-	Builtin["s"] = "0.5,0,0,0.5,0,0 0.5,0,0,0.5,0.5,0 0.5,0,0,0.5,0,0.5"
+	Builtin["s"] = "0.5 0 0 0.5 0 0,0.5 0 0 0.5 0.5 0,0.5 0 0 0.5 0 0.5"
 
 	// Square Gasket.
-	Builtin["g"] = "0.4,0,0,0.4,0,0 0.4,0,0,0.4,0.6,0 0.4,0,0,0.4,0.6,0.6 0.4,0,0,0.4,0,0.6"
+	Builtin["g"] = "0.4 0 0 0.4 0 0,0.4 0 0 0.4 0.6 0,0.4 0 0 0.4 0.6 0.6,0.4 0 0 0.4 0 0.6"
+
+	// Tree of Sierpinski.
+	Builtin["t"] = "0.5 0 0 0.5 0 0,0.5 0 0 0.5 0.5 0,0.5 0 0 0.5 0 0.5,0.2 0 0 0.2 0.8 0.8"
 }
 
 type Affine struct {
@@ -28,6 +32,7 @@ type IFS struct {
 	Choices []*Affine
 }
 
+// Apply the Affine function once, to floats x,y, and return 2 new floats.
 func (o Affine) Apply(x, y float64) (float64, float64) {
 	ax := x*o.A + y*o.B + o.E
 	ay := x*o.C + y*o.D + o.F
@@ -46,22 +51,35 @@ func (o IFS) ChaosGame(targ *canvas.Canvas, n int, c canvas.Color) {
 	}
 }
 
+// Choose one member of the IFS.
 func (o IFS) Choose() *Affine {
 	r := rand.Intn(len(o.Choices))
 	return o.Choices[r]
 }
 
+// CheckOne checks result of scanf of one item.
 func CheckOne(n int, err error) {
 	if n != 1 || err != nil {
 		panic(Errorf("Bad Number: %s", err))
 	}
 }
 
+// ParseIfsParams parses list of matrices, or the name of a Builtin.
 func ParseIfsParams(p string) *IFS {
 	z := make([]*Affine, 0)
-	pp := strings.Split(p, " ")
+
+	if len(p) > 0 && unicode.IsLetter(rune(p[0])) {
+		p2, ok := Builtin[p]
+		if !ok {
+			panic(Errorf("Unknown Builtin: %q", p))
+		}
+		p = p2
+	}
+
+	pp := strings.Split(p, ",")
+
 	for _, f := range pp {
-		ff := strings.Split(f, ",")
+		ff := strings.Split(f, " ")
 		if len(ff) != 6 {
 			panic(Errorf("bad IFS params: %q %q %q", p, f, ff))
 		}

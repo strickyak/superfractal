@@ -20,8 +20,8 @@ func init() {
 	// Square Gasket.
 	Builtin["g"] = "0.4 0 0 0.4 0 0,0.4 0 0 0.4 0.6 0,0.4 0 0 0.4 0.6 0.6,0.4 0 0 0.4 0 0.6"
 
-	// Tree of Sierpinski.
-	Builtin["t"] = "0.5 0 0 0.5 0 0,0.5 0 0 0.5 0.5 0,0.5 0 0 0.5 0 0.5,0.2 0 0 0.2 0.8 0.8"
+	// Wedgy Augmented Sierpinski.
+	Builtin["t"] = "0.5 0 0 0.5 0 0,0.5 0 0 0.5 0.5 0,0.5 0 0 0.5 0 0.5,0.2 0 0 0.2 0.7 0.7"
 }
 
 type Affine struct {
@@ -48,6 +48,41 @@ func (o IFS) ChaosGame(targ *canvas.Canvas, n int, c canvas.Color) {
 	for i := 0; i < n; i++ {
 		x, y = o.Choose().Apply(x, y)
 		targ.FSet(x, y, c)
+	}
+}
+
+// WholeGame
+func (o IFS) WholeGame(src *canvas.Canvas, n int) *canvas.Canvas {
+	t1 := src.Dup()
+	t2 := canvas.NewCanvas(src.Width, src.Height)
+	for i := 0; i < n; i++ {
+		canvas.Say("WholeStep", i)
+		o.WholeStep(t1, t2)
+		t1, t2 = t2, t1
+		t2.Fill(0, 0, t2.Width, t2.Height, canvas.Black)
+	}
+	return t1
+}
+
+func (o IFS) WholeStep(src *canvas.Canvas, dest *canvas.Canvas) {
+	for k := 0; k < len(o.Choices); k++ {
+		canvas.Say("    Map", k)
+		o.Choices[k].MapImageTo(src, dest)
+	}
+}
+
+// MapImageTo maps one picture through an IFS onto another.
+func (o Affine) MapImageTo(src *canvas.Canvas, dest *canvas.Canvas) {
+	for i := 0; i < src.Width; i++ {
+		x := float64(i) / src.FWidth
+		for j := 0; j < src.Height; j++ {
+			r, g, b := src.Get(i, j)
+			if r > 0 || g > 0 || b > 0 {
+				y := float64(j) / src.FHeight
+				x2, y2 := o.Apply(x, y)
+				dest.FSet(x2, y2, canvas.RGB(r, g, b))
+			}
+		}
 	}
 }
 

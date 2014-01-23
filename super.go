@@ -6,6 +6,7 @@ import (
 	"strings"
 )
 
+// Triptych is an assembly of n panels (dispite the name, n does not have to be 3).
 type Triptych struct {
 	Panels []*canvas.Canvas
 }
@@ -20,13 +21,8 @@ func NewTriptych(numPanels, width, height int) *Triptych {
 	return z
 }
 
-func (o *Triptych) Fill(color []canvas.Color) {
-	for i := 0; i < len(o.Panels); i++ {
-		c := o.Panels[i]
-		c.Fill(0, 0, c.Width, c.Height, color[i])
-	}
-}
-
+// Execute one step building a superfractal, reading images from src,
+// and writing on the receiver, which should be a new blank Triptych.
 func (o *Triptych) SuperStep(src *Triptych, ifss []*IFS) {
 	wait := make(chan int)
 	for i := 0; i < len(o.Panels); i++ {
@@ -50,6 +46,7 @@ func (o *Triptych) SuperStep(src *Triptych, ifss []*IFS) {
 	}
 }
 
+// ParseListOfIfsParams splits the string on ";", and the pieces are parsed with ParseIfsParams.
 func ParseListOfIfsParams(p string) []*IFS {
 	parts := strings.Split(p, ";")
 	z := make([]*IFS, len(parts))

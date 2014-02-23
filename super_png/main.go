@@ -7,6 +7,9 @@
 	GOMAXPROCS=4 go run super_png/main.go -p='s;t' -n=20
 
 	GOMAXPROCS=4 go run super_png/main.go -np=30 -p='g;s;t' -n=32 -h=3000 -w=3000
+
+	FernPenski-1:
+	GOMAXPROCS=4 go run super_png/main.go -p='s;f' -n=30 -np=12
 */
 package main
 

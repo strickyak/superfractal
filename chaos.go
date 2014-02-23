@@ -22,6 +22,11 @@ func init() {
 
 	// Wedgy Augmented Sierpinski.
 	Builtin["t"] = "0.5 0 0 0.5 0 0,0.5 0 0 0.5 0.5 0,0.5 0 0 0.5 0 0.5,0.2 0 0 0.2 0.7 0.7"
+
+	// Fern.
+	Builtin["f"] = "@.12 .20 .20 .32 .46 .18,@.62 .32 .7 .22 .52 .10,@.46 .18 .461 .18 .461 0,@.26 1 1 .8 .8 .15"
+	Builtin["f"] = "@.12 .20 .20 .32 .50 .18,@.62 .32 .7 .22 .52 .10,@.49 .38 .491 .38 .461 0,@.26 1.1 1 .9 .88 .10"
+	Builtin["f"] = "@.12 .20 .20 .32 .50 .18,@.62 .32 .7 .22 .52 .10,@.49 .38 .491 .38 .461 0,@.26 1.18 1 .98 .88 .18"
 }
 
 type Affine struct {
@@ -125,12 +130,28 @@ func ParseIfsParams(p string) *IFS {
 			panic(Errorf("bad IFS params: %q %q %q", p, f, ff))
 		}
 		aff := &Affine{}
-		CheckOne(Sscanf(ff[0], "%f", &aff.A))
-		CheckOne(Sscanf(ff[1], "%f", &aff.B))
-		CheckOne(Sscanf(ff[2], "%f", &aff.C))
-		CheckOne(Sscanf(ff[3], "%f", &aff.D))
-		CheckOne(Sscanf(ff[4], "%f", &aff.E))
-		CheckOne(Sscanf(ff[5], "%f", &aff.F))
+		if ff[0][0]=='@' {
+			var xa, ya, xb, yb, xc, yc float64
+			CheckOne(Sscanf(ff[0][1:], "%f", &xa))
+			CheckOne(Sscanf(ff[1], "%f", &ya))
+			CheckOne(Sscanf(ff[2], "%f", &xb))
+			CheckOne(Sscanf(ff[3], "%f", &yb))
+			CheckOne(Sscanf(ff[4], "%f", &xc))
+			CheckOne(Sscanf(ff[5], "%f", &yc))
+			aff.A = xb - xa
+			aff.C = yb - ya
+			aff.E = xc - aff.A
+			aff.F = yc - aff.C
+			aff.B = xa - aff.E
+			aff.D = ya - aff.F
+		} else {
+			CheckOne(Sscanf(ff[0], "%f", &aff.A))
+			CheckOne(Sscanf(ff[1], "%f", &aff.B))
+			CheckOne(Sscanf(ff[2], "%f", &aff.C))
+			CheckOne(Sscanf(ff[3], "%f", &aff.D))
+			CheckOne(Sscanf(ff[4], "%f", &aff.E))
+			CheckOne(Sscanf(ff[5], "%f", &aff.F))
+		}
 		z = append(z, aff)
 	}
 	return &IFS{Choices: z}

@@ -30,6 +30,7 @@ var (
 	params = flag.String("p", "", "IFS parameters, as lists of matrices, or name of a Builtin IFS.")
 	list   = flag.Bool("l", false, "List the library.")
 	style  = flag.Int("s", 0, "Style: 0=chaos 1=whole")
+	grid  = flag.Bool("g", false, "Draw debugging grid.")
 )
 
 func main() {
@@ -44,6 +45,9 @@ func main() {
 	}
 
 	c := canvas.NewCanvas(*width, *height)
+	if *grid {
+		c.Grid(*width/10, canvas.RGB(100, 100, 100))
+	}
 	ifs := superfractal.ParseIfsParams(*params)
 	switch *style {
 	case 1: // Whole.

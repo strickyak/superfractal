@@ -23,14 +23,15 @@ import (
 )
 
 var (
-	base      = flag.String("base", "_", "basename for output images")
-	numPanels = flag.Int("np", 5, "number of panels")
-	num       = flag.Int("n", 1000000, "number if iterations")
-	width     = flag.Int("w", 1000, "width in pixels")
-	height    = flag.Int("h", 1000, "width in pixels")
-	params    = flag.String("p", "", "IFS parameters, as lists of matrices, or name of a Builtin IFS.")
-	list      = flag.Bool("l", false, "List short names for builtin IFSs.")
-	mustWhite = flag.Bool("mw", false, "Only draw in white")
+	base        = flag.String("base", "_", "basename for output images")
+	numPanels   = flag.Int("np", 5, "number of panels")
+	num         = flag.Int("n", 1000000, "number if iterations")
+	width       = flag.Int("w", 1000, "width in pixels")
+	height      = flag.Int("h", 1000, "width in pixels")
+	params      = flag.String("p", "", "IFS parameters, as lists of matrices, or name of a Builtin IFS.")
+	list        = flag.Bool("l", false, "List short names for builtin IFSs.")
+	mustWhite   = flag.Bool("mw", false, "Only draw in white")
+	startTriang = flag.Bool("st", false, "Start with triangles")
 )
 
 func main() {
@@ -48,17 +49,24 @@ func main() {
 	ifss := superfractal.ParseListOfIfsParams(*params)
 	src := superfractal.NewTriptych(*numPanels, *width, *height)
 
-	// Fill initial Triptych with different colors.
-	r, g, b := byte(255), byte(0), byte(0)
-	for i := 0; i < *numPanels; i++ {
-		if *mustWhite {
-			r,g,b = byte(255),byte(255),byte(255)
+	if *startTriang {
+		// Special hack for demoing sier's traingles
+		for i := 0; i < *numPanels; i++ {
+			src.Panels[i].PaintTriangle(0, 0, 0, *height, *width, 0, canvas.White)
 		}
-		src.Panels[i].Fill(0, 0, *width, *height, canvas.RGB(r, g, b))
+	} else {
+		// Fill initial Triptych with different colors.
+		r, g, b := byte(255), byte(0), byte(0)
+		for i := 0; i < *numPanels; i++ {
+			if *mustWhite {
+				r, g, b = byte(255), byte(255), byte(255)
+			}
+			src.Panels[i].Fill(0, 0, *width, *height, canvas.RGB(r, g, b))
 
-		// Rotate & dim the colors a bit, on each iteration.
-		// TODO: something better than this.
-		r, g, b = byte(0.96*float64(b)), byte(0.96*float64(r)), byte(0.96*float64(g))
+			// Rotate & dim the colors a bit, on each iteration.
+			// TODO: something better than this.
+			r, g, b = byte(0.96*float64(b)), byte(0.96*float64(r)), byte(0.96*float64(g))
+		}
 	}
 
 	// Loop for *num steps, creating successive superfractal approximations.

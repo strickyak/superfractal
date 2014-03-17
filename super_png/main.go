@@ -30,6 +30,7 @@ var (
 	height    = flag.Int("h", 1000, "width in pixels")
 	params    = flag.String("p", "", "IFS parameters, as lists of matrices, or name of a Builtin IFS.")
 	list      = flag.Bool("l", false, "List short names for builtin IFSs.")
+	mustWhite = flag.Bool("mw", false, "Only draw in white")
 )
 
 func main() {
@@ -50,6 +51,9 @@ func main() {
 	// Fill initial Triptych with different colors.
 	r, g, b := byte(255), byte(0), byte(0)
 	for i := 0; i < *numPanels; i++ {
+		if *mustWhite {
+			r,g,b = byte(255),byte(255),byte(255)
+		}
 		src.Panels[i].Fill(0, 0, *width, *height, canvas.RGB(r, g, b))
 
 		// Rotate & dim the colors a bit, on each iteration.

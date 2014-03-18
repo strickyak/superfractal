@@ -5,11 +5,11 @@
 	See: Barnsley, Michael, John E. Hutchinson, and Orjan Stenflo. "V-variable fractals and superfractals."
 	But we're doing it differently.
 
-	go build coded/main.go && for s in 1 2 3 4 5 6 ; do time ./main  -o _e$s.png -p 'W;X;Y' -n 100000 -s $s -d 8 -fuzz=8 ; done
+	go build main/coded/coded.go && for s in 1 2 3 4 5 6 ; do time ./coded  -o _e$s.png -p 'W;X;Y' -n 100000 -s $s -d 8 -fuzz=8 ; done
 
-	go build coded/main.go && for s in 1 2 3 4 5 6 ; do time ./main  -o _e$s.png -p 'g;f' -n 5000000 -s $s -d 18 -fuzz=1 -w=5000 -h=5000 ; done
+	go build main/coded/coded.go && for s in 1 2 3 4 5 6 ; do time ./coded  -o _e$s.png -p 'g;f' -n 5000000 -s $s -d 18 -fuzz=1 -w=5000 -h=5000 ; done
 
-	 go build coded/main.go && for s in 1 2 3 4 5 6 ; do time ./main  -o _e$s.png -p 'f;f;g' -f 4 -n 1000000 -s $s -d 14 -fuzz=1 -w=2000 -h=2000 ; done
+	 go build main/coded/coded.go && for s in 1 2 3 4 5 6 ; do time ./coded  -o _e$s.png -p 'f;f;g' -f 4 -n 1000000 -s $s -d 14 -fuzz=1 -w=2000 -h=2000 ; done
 
 
 */
@@ -28,7 +28,7 @@ import (
 var (
 	filename = flag.String("o", "_", "basename for output images")
 	seed     = flag.Int("s", 1, "seed for code tree")
-	fanout   = flag.Int("f", 3, "depth of code tree")
+	// fanout   = flag.Int("f", 3, "depth of code tree")
 	depth    = flag.Int("d", 12, "depth of code tree")
 	num      = flag.Int("n", 1000, "number if iterations")
 	width    = flag.Int("w", 1000, "width in pixels")
@@ -53,7 +53,6 @@ func main() {
 	ifss := superfractal.ParseListOfIfsParams(*params)
 	tree := &superfractal.CodeTree{
 		Depth:  *depth,
-		Fanout: *fanout,
 		IFSs:   ifss,
 	}
 	tree.Init(*seed)

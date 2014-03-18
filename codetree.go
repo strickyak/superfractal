@@ -12,12 +12,12 @@ import (
 
 type CodeTree struct {
 	// Set on creation:
-	Depth  int
-	IFSs   []*IFS
+	Depth int
+	IFSs  []*IFS
 
 	// Computed by Init:
 	fanout int
-	codes [][]byte
+	codes  [][]byte
 }
 
 func (o *CodeTree) Init(seed int) {
@@ -65,7 +65,7 @@ func (o *CodeTree) TransformPath(path []byte, choices []byte) (float64, float64)
 	for i := len(path) - 1; i > 0; i-- {
 		ifs := o.IFSs[int(choices[i-1])%n]
 		m := len(ifs.Choices)
-		fn := ifs.Choices[int(path[i]) % m]
+		fn := ifs.Choices[int(path[i])%m]
 		x, y = fn.Apply(x, y)
 	}
 

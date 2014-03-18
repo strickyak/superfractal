@@ -32,13 +32,13 @@ var (
 	filename = flag.String("o", "_", "basename for output images")
 	seed     = flag.Int("s", 1, "seed for code tree")
 	// fanout   = flag.Int("f", 3, "depth of code tree")
-	depth    = flag.Int("d", 12, "depth of code tree")
-	num      = flag.Int("n", 1000, "number if iterations")
-	width    = flag.Int("w", 1000, "width in pixels")
-	height   = flag.Int("h", 1000, "width in pixels")
-	params   = flag.String("p", "", "IFS parameters, as lists of matrices, or name of a Builtin IFS.")
-	list     = flag.Bool("l", false, "Just list short names for builtin IFSs.")
-	fuzz     = flag.Int("fuzz", 1, "Fuzzy Point Size")
+	depth  = flag.Int("d", 12, "depth of code tree")
+	num    = flag.Int("n", 1000, "number if iterations")
+	width  = flag.Int("w", 1000, "width in pixels")
+	height = flag.Int("h", 1000, "width in pixels")
+	params = flag.String("p", "", "IFS parameters, as lists of matrices, or name of a Builtin IFS.")
+	list   = flag.Bool("l", false, "Just list short names for builtin IFSs.")
+	fuzz   = flag.Int("fuzz", 1, "Fuzzy Point Size")
 )
 
 func main() {
@@ -55,8 +55,8 @@ func main() {
 	// Parse IFSs & construct initial Triptych.
 	ifss := superfractal.ParseListOfIfsParams(*params)
 	tree := &superfractal.CodeTree{
-		Depth:  *depth,
-		IFSs:   ifss,
+		Depth: *depth,
+		IFSs:  ifss,
 	}
 	tree.Init(*seed)
 

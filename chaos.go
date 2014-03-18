@@ -112,7 +112,7 @@ func ParseIfsParams(p string) *IFS {
 			panic(Errorf("bad IFS params: %q %q %q", p, f, ff))
 		}
 		aff := &Affine{}
-		if ff[0][0]=='@' {
+		if ff[0][0] == '@' {
 			var xa, ya, xb, yb, xc, yc float64
 			CheckOne(Sscanf(ff[0][1:], "%f", &xa))
 			CheckOne(Sscanf(ff[1], "%f", &ya))

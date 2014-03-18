@@ -11,6 +11,9 @@
 
 	 go build main/coded/coded.go && for s in 1 2 3 4 5 6 ; do time ./coded  -o _e$s.png -p 'f;f;g' -f 4 -n 1000000 -s $s -d 14 -fuzz=1 -w=2000 -h=2000 ; done
 
+	Various ferns:
+	go build main/coded/coded.go && for s in 1 2 3 4 5 6 7 8 9 ; do time ./coded  -o _e$s.png -p 'A;f;B;C' -n 1000000 -s $s -d 8 -fuzz=2 ; done && eog _e?.png
+
 
 */
 package main

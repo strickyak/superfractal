@@ -47,12 +47,14 @@ func (o *CodeTree) LookupPath(path []byte, out []byte) {
 	n := len(o.IFSs)
 	out[0] = o.codes[0][0]
 	off := 0
-	for i, p := range path[1:] { // Notice i is less by 1
-		ifs := o.IFSs[int(out[i])%n]
-		m := len(ifs.Choices)
-		off += int(p) % m
-		out[i+1] = o.codes[i+1][off]
-		off *= o.fanout
+	for i, p := range path {
+		if i > 0 {
+			ifs := o.IFSs[int(out[i-1])%n]
+			m := len(ifs.Choices)
+			off += int(p) % m
+			out[i] = o.codes[i][off]
+			off *= o.fanout
+		}
 	}
 }
 
@@ -76,7 +78,6 @@ func (o *CodeTree) RandomPoint(tmp1, tmp2 []byte) (float64, float64) {
 	// Choose the path.
 	n := len(tmp1)
 	for i := 0; i < n; i++ {
-		// tmp1[i] = byte(rand.Intn(o.fanout))
 		tmp1[i] = byte(rand.Intn(256))
 	}
 

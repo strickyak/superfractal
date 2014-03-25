@@ -1,6 +1,0 @@
-go run super_png/main.go -p='s;s' -n=20  -base Keep/SierByTriangs -mw=1 -st=1 -np=1
-
-go run super_png/main.go -p='s;s' -n=20  -base Keep/SierBySquares -mw=1  -np=1
-
-go run super_png/main.go -p='W;X;Y;Z' -n=20  -base Keep/Monster  -mw=1  -np=9
-

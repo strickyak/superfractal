@@ -30,8 +30,8 @@ var (
 	height      = flag.Int("h", 1000, "width in pixels")
 	params      = flag.String("p", "", "IFS parameters, as lists of matrices, or name of a Builtin IFS.")
 	list        = flag.Bool("l", false, "List short names for builtin IFSs.")
-	mustWhite   = flag.Bool("mw", false, "Only draw in white")
-	startTriang = flag.Bool("st", false, "Start with triangles")
+	mustWhite   = flag.Bool("mustwhite", false, "Only draw in white")
+	startTriang = flag.Bool("starttriang", false, "Start with triangles")
 )
 
 func main() {
